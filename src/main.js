@@ -17,6 +17,8 @@ import '@/assets/css/index.scss'
 import 'lib-flexible/flexible.js'
 // filters
 import './filters'
+//引入localStorage
+import '@/plugins/localStorage'
 
 Vue.prototype.$cdn = $cdn
 

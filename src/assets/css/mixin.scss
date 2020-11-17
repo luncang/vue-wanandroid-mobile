@@ -7,7 +7,7 @@
     clear: both;
   }
 }
- 
+
 // 多行隐藏
 @mixin textoverflow($clamp:1) {
   display: block;
@@ -34,3 +34,29 @@
   flex-wrap: $fw;
   -webkit-flex-wrap: $fw;
 }
+
+/**
+* placeholder颜色
+ */
+@mixin inputplaceholder($placeholdercolor) {
+  input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+    color: $placeholdercolor;
+    font-size: 14px;
+  }
+
+  input:-moz-placeholder, textarea:-moz-placeholder {
+    color: $placeholdercolor;
+    font-size: 14px;
+  }
+
+  input::-moz-placeholder, textarea::-moz-placeholder {
+    color: $placeholdercolor;
+    font-size: 14px;
+  }
+
+  input:-ms-input-placeholder, textarea:-ms-input-placeholder {
+    color: $placeholdercolor;
+    font-size: 14px;
+  }
+}
+

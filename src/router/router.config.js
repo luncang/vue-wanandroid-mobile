@@ -9,32 +9,49 @@ export const constantRouterMap = [
     redirect: '/home',
     meta: {
       title: '首页',
-      keepAlive: false
+      keepAlive: false,
+      needLogin: true
     },
     children: [
       {
-        path: '/home',
+        path: 'home',
         name: 'Home',
         component: () => import('@/views/home/index'),
-        meta: { title: '首页', keepAlive: false }
+        meta: {
+          title: '首页',
+          keepAlive: false,
+          needLogin: true
+        }
       },
       {
-        path: '/about',
+        path: 'about',
         name: 'About',
         component: () => import('@/views/home/about'),
-        meta: { title: '关于我', keepAlive: false }
+        meta: {
+          title: '关于我',
+          keepAlive: false,
+          needLogin: true
+        }
       }
     ]
   }, {
     path: '/login',
     component: () => import('@/views/login/login'),
     name: 'Login',
-    meta: { title: '登录', keepAlive: false }
+    meta: {
+      title: '登录',
+      keepAlive: false,
+      needLogin: false
+    }
   }
-  ,{
+  , {
     path: '/register',
     component: () => import('@/views/login/register'),
     name: 'Register',
-    meta: { title: '注册', keepAlive: false }
+    meta: {
+      title: '注册',
+      keepAlive: false,
+      needLogin: false
+    }
   }
 ]

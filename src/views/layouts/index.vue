@@ -22,17 +22,31 @@ export default {
         {
           title: '首页',
           to: {
-            name: 'Home'
+            path: '/home'
           },
-          icon: 'home-o'
+          icon: 'wap-home'
         },
         {
-          title: '关于我',
+          title: '关于',
           to: {
-            name: 'About'
+            path: '/about'
           },
           icon: 'user-o'
-        }
+        },
+        {
+          title:'项目',
+          to: {
+            path: '/project'
+          },
+          icon: 'vip-card'
+        },
+        {
+          title:'体系',
+          to: {
+            path: '/system'
+          },
+          icon: 'fire'
+        },
       ]
     }
   },

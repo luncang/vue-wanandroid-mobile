@@ -17,6 +17,7 @@ service.interceptors.request.use(
     if (!config.hideloading) {
       // loading
       Toast.loading({
+        message:'加载中...',
         forbidClick: true
       })
     }
@@ -55,4 +56,18 @@ service.interceptors.response.use(
   }
 )
 
+
+export function isSuccess(errorCode) {
+  console.log('isSuccess errorCode:'+errorCode)
+  return parseInt(errorCode) === 0
+}
+
+//全局配置，登录失效
+export function isRelogin(errorCode) {
+  return parseInt(errorCode) === -1001
+}
+
+
 export default service
+
+

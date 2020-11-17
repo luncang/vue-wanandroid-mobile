@@ -1,15 +1,6 @@
 <template>
   <div class="login">
 
-    <div class="avatar">
-      <van-image
-        round
-        fit="cover"
-        width="30vw"
-        height="30vw"
-        src="https://img.yzcdn.cn/vant/cat.jpeg"
-      />
-    </div>
 
     <div class="login_info">
 
@@ -41,6 +32,10 @@
     </div>
 
     <div class="other">
+      <van-checkbox v-model="agreeAgreement" icon-size="13px" checked-color="#07c160"
+                    shape="square">
+        <span slot="default" :class="[agreeAgreement?'checked':'unchecked']"> 同意用户注册协议</span>
+      </van-checkbox>
       <span @click="onLogin" class="ripple">去登录</span>
     </div>
 
@@ -50,16 +45,21 @@
 
 <script>
   import { register } from '@/api/user'
+  import { isEmpty } from '@/utils/string'
+  import { isSuccess } from '@/utils/request'
+  import { appMixin } from '@/store/mixin'
 
   export default {
     name: 'login',
+    mixins: [appMixin],
     data() {
       return {
         username: '',
         password: '',
         repassword: '',
         type: 'password',
-        pass: '密&#12288;码：'
+        pass: '密&#12288;码：',
+        agreeAgreement: true
       }
     },
     methods: {
@@ -69,18 +69,57 @@
       },
 
       onRegister() {
-        console.log('注册')
+        console.log('注册：' + this.username)
+        if (isEmpty(this.username)) {
+          this.$toast({ message: '用户名不能为空！', position: 'top' })
+          return
+        }
+        if (isEmpty(this.password)) {
+          this.$toast({ message: '密码不能为空！', position: 'top' })
+          return
+        }
+
+        if (isEmpty(this.repassword)) {
+          this.$toast({ message: '确认密码不能为空！', position: 'top' })
+          return
+        }
+
+        if (this.password !== this.repassword) {
+          this.$toast({ message: '密码与确认密码不一致！', position: 'top' })
+          return
+        }
+        if (!this.agreeAgreement) {
+          this.$toast({ message: '未勾选同意用户注册协议！', position: 'top' })
+          return
+        }
+
+
         let data = { username: this.username, password: this.password, repassword: this.repassword }
         register(data).then((response) => {
-          console.log(`register then:${response}`)
+          console.log(`${JSON.stringify(response)}`)
+
+          if (isSuccess(response.errorCode)) {
+            this.setUserName(this.username)
+
+            this.$toast.success('注册成功')
+            let timer = setTimeout(() => {
+              this.onLogin()
+              clearTimeout(timer)
+            }, 1500)
+            return
+          }
+          this.$toast.fail(response.errorMsg)
+
         }).catch((exception) => {
           console.log(`register catch:${exception}}`)
+          this.$toast.fail('登录出现异常状况！')
         })
       },
       onLogin() {
         console.log('登录')
         this.$router.go(-1)
       }
+
 
     }
   }
@@ -134,26 +173,7 @@
       }
 
 
-      input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
-        color: #999999;
-        font-size: 14px;
-      }
-
-      input:-moz-placeholder, textarea:-moz-placeholder {
-        color: #999999;
-        font-size: 14px;
-      }
-
-      input::-moz-placeholder, textarea::-moz-placeholder {
-        color: #999999;
-        font-size: 14px;
-      }
-
-      input:-ms-input-placeholder, textarea:-ms-input-placeholder {
-        color: #999999;
-        font-size: 14px;
-      }
-
+      @include inputplaceholder('#999999')
 
     }
 
@@ -170,11 +190,22 @@
       height: 30px;
       width: 100%;
       display: flex;
-      justify-content: flex-end;
+      align-items: center;
+      justify-content: space-between;
 
       > span {
         font-size: 10px;
         padding: 10px 0px;
+        color: white;
+      }
+
+      .checked {
+        font-size: 10px;
+        color: #07c160;
+      }
+
+      .unchecked {
+        font-size: 10px;
         color: white;
       }
 

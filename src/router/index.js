@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { constantRouterMap } from './router.config.js'
+import { getUser } from '../plugins/localStorage'
 
 // hack router push callback
 const originalPush = Router.prototype.push
@@ -26,5 +27,23 @@ export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
 }
+
+//开启导航守卫
+router.beforeEach((to, from, next) => {
+  console.log(`needlogin:${to.meta.needLogin}`)
+
+//需要登录的页面，如果未登录，则跳转到登录页面
+  if (!to.meta.needLogin) {
+    next()
+    return
+  }
+
+  if (!getUser()) {
+    next('/login')
+    return
+  }
+  next()
+
+})
 
 export default router

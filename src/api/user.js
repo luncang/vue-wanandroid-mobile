@@ -3,11 +3,11 @@ import api from './index'
 import request from '@/utils/request'
 
 // 登录
-export function login(data) {
+export function login(params) {
   return request({
     url: api.Login,
     method: 'post',
-    data
+    params:params
   })
 }
 

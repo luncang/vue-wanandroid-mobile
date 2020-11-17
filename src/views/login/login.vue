@@ -47,8 +47,16 @@
 </template>
 
 <script>
+  import { appMixin } from '@/store/mixin'
+  import { setUser, getUser } from '@/plugins/localStorage'
+  import { isEmpty } from '@/utils/string'
+  import { login } from '@/api/user'
+  import { isSuccess } from '../../utils/request'
+
+
   export default {
     name: 'login',
+    mixins: [appMixin],
     data() {
       return {
         username: '',
@@ -93,9 +101,38 @@
 
       },
       onLogin() {
-        console.log('登录')
+
+        if (isEmpty(this.username)) {
+          this.$toast('用户名不能为空')
+          return
+        }
+
+        if (isEmpty(this.password)) {
+          this.$toast('密码不能为空')
+          return
+        }
+
+
+        let data = { username: this.username, password: this.password }
+        login(data).then((response) => {
+          if(isSuccess(response.errorCode)){
+            setUser(response.data)
+            this.$router.push('/home')
+            return
+          }
+          this.$toast(response.errorMsg)
+        }).catch((exception) => {
+          console.log(exception.toString())
+          this.$toast('登录异常')
+        })
+
+
       }
 
+    },
+    mounted() {
+      let user = getUser()
+      this.username = user.username
     }
   }
 </script>
