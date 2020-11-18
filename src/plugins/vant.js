@@ -12,11 +12,14 @@ import {
   Lazyload,
   Checkbox,
   CheckboxGroup,
-  Toast
+  Toast,
+  Swipe,
+  SwipeItem,
+  Search
 } from 'vant'
 
 Vue.use(Button)
 Vue.use(Cell)
 Vue.use(List)
 Vue.use(Tabbar).use(TabbarItem).use(Icon).use(Field).use(VanImage).use(Lazyload)
-  .use(Checkbox).use(CheckboxGroup).use(Toast)
+  .use(Checkbox).use(CheckboxGroup).use(Toast).use(Swipe).use(SwipeItem).use(Search)

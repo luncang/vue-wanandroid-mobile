@@ -19,7 +19,7 @@ export const constantRouterMap = [
         component: () => import('@/views/home/index'),
         meta: {
           title: '首页',
-          keepAlive: false,
+          keepAlive: true,
           needLogin: true
         }
       },
@@ -29,7 +29,7 @@ export const constantRouterMap = [
         component: () => import('@/views/home/about'),
         meta: {
           title: '关于我',
-          keepAlive: false,
+          keepAlive: true,
           needLogin: true
         }
       }

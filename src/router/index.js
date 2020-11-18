@@ -33,16 +33,13 @@ router.beforeEach((to, from, next) => {
   console.log(`needlogin:${to.meta.needLogin}`)
 
 //需要登录的页面，如果未登录，则跳转到登录页面
-  if (!to.meta.needLogin) {
-    next()
-    return
-  }
-
-  if (!getUser()) {
+  if (to.meta.needLogin && !getUser()) {
     next('/login')
     return
   }
+
   next()
+
 
 })
 

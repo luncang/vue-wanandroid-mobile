@@ -40,6 +40,13 @@ export default {
   mounted() {
     this.initData()
   },
+
+  activated() {
+    console.log('about activated')
+  },
+  deactivated() {
+    console.log('about deactivted')
+  },
   methods: {
     // 请求数据案例
     initData() {
