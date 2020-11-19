@@ -5,7 +5,9 @@ const api = {
   UserName: '/user/name',
   Banner: '/banner/json',
   HotKey: '/hotkey/json',
-  Search:'/article/query/%1/json'
+  Search: '/article/query/{0}/json',
+  ArticleList: '/project/list/1/json?cid=402',
+
 
   // article/listproject/0/json //项目列表
 // /project/tree/json //项目分类列表
