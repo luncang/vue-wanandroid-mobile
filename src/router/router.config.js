@@ -32,7 +32,19 @@ export const constantRouterMap = [
           keepAlive: true,
           needLogin: true
         }
-      }
+      },
+
+      {
+        path: 'project',
+        name: 'Project',
+        component: () => import('@/views/home/project'),
+        meta: {
+          title: '项目',
+          keepAlive: true,
+          needLogin: true
+        }
+      },
+
     ]
   }, {
     path: '/login',

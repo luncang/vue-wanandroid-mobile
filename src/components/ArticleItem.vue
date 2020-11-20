@@ -3,6 +3,10 @@
     <div class="left">
       <span class="title">{{item.title}}</span><br/>
       <span class="desc">{{item.desc}}</span>
+      <div class="article-address">
+        <span class="ripple" @click="openNewUrl(item.link)">看文章</span>
+        <span class="ripple" @click="openNewUrl(item.projectLink)">看项目</span>
+      </div>
       <div class="left-bottom">
         <van-icon name="like" size="20" :color="item.collect?'#333333':'#666666'"/>
         <span class="author">{{item.author}}</span>
@@ -17,12 +21,15 @@
 </template>
 
 <script>
-  import { formatDate } from '@/filters/filter'
 
   export default {
     name: 'ArticleItem',
     props: ['item'],
-    methods: {}
+    methods: {
+      openNewUrl(url) {
+        window.open(url, '_blank')
+      }
+    }
   }
 </script>
 
@@ -58,13 +65,12 @@
 
       .desc {
         display: block;
-        max-lines: 3;
         color: #666666;
         font-size: 14px;
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
-        -webkit-line-clamp: 5; /* 行数 */
+        -webkit-line-clamp: 3; /* 行数 */
         -webkit-box-orient: vertical;
         line-height: 25px;
       }
@@ -83,6 +89,30 @@
 
         .author {
           margin: 0 15px;
+        }
+      }
+
+      .article-address {
+        width: 100%;
+        position: absolute;
+        bottom: 30px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        span {
+          font-size: 13px;
+          color: white;
+          background: #07c160;
+          height: 25px;
+          text-align: center;
+          line-height: 25px;
+          border-radius: 10px;
+          width: 40%;
+        }
+
+        :nth-child(2) {
+          margin-left: 50px;
         }
       }
     }

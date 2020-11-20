@@ -14,8 +14,10 @@
 
 
         <div class="item">
-          <article-item v-for="(article,index) in list" :item="article" :key="index"></article-item>
+          <component :is="name" v-for="(article,index) in list" :item="article" :key="index">动态组件</component>
+          <!--          <article-item v-for="(article,index) in list" :item="article" :key="index"></article-item>-->
         </div>
+
 
       </van-list>
     </van-pull-refresh>
@@ -25,10 +27,11 @@
 <script>
   import ArticleItem from './ArticleItem'
 
+
   export default {
     name: 'ListView',
     components: { ArticleItem },
-    props: ['list'],
+    props: ['list', 'name'],
     data() {
       return {
         loading: false,
@@ -58,8 +61,21 @@
       //没有更多数据时调用
       onNoMoreData() {
         this.finished = true
+      },
+
+      getComponent() {
+
+        switch (this.name) {
+          case 'article-item':
+            import('./ArticleItem')
+            break
+        }
+
       }
 
+    },
+    mounted() {
+      this.getComponent()
     }
   }
 </script>

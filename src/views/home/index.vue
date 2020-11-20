@@ -3,7 +3,7 @@
   <div class="index-container">
     <SearchBar :hotkeys="hotkeys" @on-search-input-change="onSearchInputChange"></SearchBar>
     <LoopBanner :banners="banners" @on-banner-click="onBannerClick"></LoopBanner>
-    <ListView ref="articlelist" :list="articles" @onrefresh="onRefresh" @onload="onLoad"></ListView>
+    <ListView ref="articlelist" :list="articles" @onrefresh="onRefresh" @onload="onLoad" name="article-item"></ListView>
   </div>
 </template>
 
@@ -35,7 +35,7 @@
       console.log('index activated')
       this.doGetBanners()
       this.doGetHotKey()
-      this.onRefresh(0)
+      this.onRefresh()
     },
     deactivated() {
       console.log('index deactivted')
@@ -79,14 +79,14 @@
         })
       },
 
-      doGetArticleList(page) {
-        console.log(` get article list page:${page}`)
-        getArticleList(page).then(response => {
+      doGetArticleList() {
+        console.log(` get article list page:${this.page}`)
+        getArticleList(this.page,402).then(response => {
           if (!isSuccess(response.errorCode)) {
             this.$toast(response.errorMsg)
             return
           }
-          if (page === 0) {
+          if (this.page === 0) {
             this.articles = []
           }
           this.$refs.articlelist.onFinish()
@@ -95,7 +95,7 @@
             this.$refs.articlelist.onNoMoreData()
             return
           }
-          this.page = response.data.curPage
+          this.page++
           this.$forceUpdate()
 
         }).catch(exception => {
@@ -106,12 +106,12 @@
       onRefresh() {
         console.log('onRfresh')
         this.page = 0
-        this.doGetArticleList(this.page)
+        this.doGetArticleList()
       },
 
       onLoad() {
         console.log('onLoad')
-        this.doGetArticleList(this.page)
+        this.doGetArticleList()
       }
 
     }

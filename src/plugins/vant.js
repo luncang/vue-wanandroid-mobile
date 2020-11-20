@@ -5,6 +5,8 @@ import {
   List,
   PullRefresh,
   Cell,
+  Tab,
+  Tabs,
   Tabbar,
   TabbarItem,
   Icon,
@@ -24,4 +26,4 @@ Vue.use(Cell)
 Vue.use(List)
 Vue.use(Tabbar).use(TabbarItem).use(Icon).use(Field).use(VanImage).use(Lazyload)
   .use(Checkbox).use(CheckboxGroup).use(Toast).use(Swipe).use(SwipeItem).use(Search)
-  .use(PullRefresh)
+  .use(PullRefresh).use(Tab).use(Tabs)

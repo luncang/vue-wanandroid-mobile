@@ -5,11 +5,12 @@
 
 import api from './index'
 import request from '@/utils/request'
+import { format } from '@/utils/string'
 
 export function getBanners() {
   return request({
     url: api.Banner,
-    method: 'get',
+    method: 'get'
   })
 }
 
@@ -17,22 +18,30 @@ export function getHotKey() {
   return request({
     url: api.HotKey,
     method: 'get',
-    hideloading:true
+    hideloading: true
   })
 }
 
 export function search(k, page) {
   return request({
-    url: String.format(api.Search, page),
+    url: format(api.Search, page),
     method: 'post',
     params: { k: k }
   })
 }
 
-export function getArticleList(page) {
+export function getArticleList(page,cid) {
   return request({
-    url: api.ArticleList,
+    url: String.format(api.ArticleList,page,cid),
     method: 'get',
-    hideloading:true
+    hideloading: true
+  })
+}
+
+
+export function getArticleTree() {
+  return request({
+    url:api.ActicleTree,
+    method:'get'
   })
 }
