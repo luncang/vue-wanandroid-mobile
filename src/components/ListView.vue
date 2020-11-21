@@ -1,7 +1,9 @@
 <template>
   <div>
 
-    <van-pull-refresh :disabled="false" v-model="refreshing" @refresh="onRefresh" v-if="list.length>0">
+    <van-pull-refresh :disabled="false" v-model="refreshing" @refresh="onRefresh"
+    >
+      <!--      v-if="(datas.length>0||list.length>0)"-->
 
 
       <van-list
@@ -14,7 +16,9 @@
 
 
         <div class="item">
-          <component :is="name" v-for="(article,index) in list" :item="article" :key="index">动态组件</component>
+          <component :is="name" v-for="(article,index) in datas" :item="article" :key="index">
+            动态组件
+          </component>
           <!--          <article-item v-for="(article,index) in list" :item="article" :key="index"></article-item>-->
         </div>
 
@@ -36,17 +40,21 @@
       return {
         loading: false,
         finished: false,
-        refreshing: false
+        refreshing: false,
+        page: 0,
+        datas: this.list
       }
     },
     methods: {
       onRefresh() {
         this.finished = false
         this.loading = true
+        console.log('list view on refresh:page:' + this.page)
         this.$emit('onrefresh')
       },
 
       onLoad() {
+        console.log('list view on load:page:' + this.page)
         this.$emit('onload')
       },
 
@@ -56,11 +64,13 @@
           this.refreshing = false
         }
         this.loading = false
+        console.log(`------onFinish:refreshing:${this.refreshing},loading:${this.loading}`)
       },
 
       //没有更多数据时调用
       onNoMoreData() {
         this.finished = true
+        console.log(`------onNoMoreData:finished:${this.finished},refreshing:${this.refreshing},loading:${this.loading}`)
       },
 
       getComponent() {
@@ -75,8 +85,17 @@
 
     },
     mounted() {
+      console.log('list view mounted...')
       this.getComponent()
     }
+    // watch:{
+    //   datas:{
+    //     immediate:true,
+    //     handler(){
+    //       console.log('datas changed...')
+    //     }
+    //   }
+    // }
   }
 </script>
 

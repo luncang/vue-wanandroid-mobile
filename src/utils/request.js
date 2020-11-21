@@ -58,7 +58,7 @@ service.interceptors.response.use(
 
 
 export function isSuccess(errorCode) {
-  console.log('isSuccess errorCode:'+errorCode)
+
   return parseInt(errorCode) === 0
 }
 

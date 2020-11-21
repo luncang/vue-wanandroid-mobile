@@ -9,9 +9,8 @@
       type="line" color="#07c160"
       title-active-color="#07c160" title-inactive-color="#333333">
       <van-tab v-for="(item,index) in articleTree" :title="item.name" :key="index">
-        <ListView ref="item" :list="articles" @onrefresh="onRefresh" @onload="onLoad"
+        <ListView :ref="`item:${index}`" :list="articles" @onrefresh="onRefresh" @onload="onLoad"
                   name="article-item">
-
         </ListView>
       </van-tab>
     </van-tabs>
@@ -31,17 +30,18 @@
       return {
         active: 0,
         articleTree: [],
-        articles: [],
-        page: 0
+        articles: []
+        // page: 0
 
       }
     },
     methods: {
 
       onTabClick() {
-        console.log('active:' + this.active + ',loading:' + this.$refs.item[this.active])
-        if (!this.$refs.item[this.active] || !this.$refs.item[this.active].list || this.$refs.item[this.active].list.length <= 0) {
-          this.page = 0
+
+        console.log('active:' + this.active + ',loading:' + this.$refs[`item:${this.active}`])
+        let refs = this.$refs[`item:${this.active}`]
+        if (!refs || refs.length <= 0 || !refs[0].datas || refs[0].datas.length <= 0) {
           this.onRefresh()
         }
 
@@ -69,8 +69,17 @@
 
       },
       doGetArticleList() {
+        let components = this.$refs[`item:${this.active}`]
+        let page
+        if (!components || components.length <= 0 || !components[0].page) {
+          page = 0
+        } else {
+          page = components[0].page
+        }
 
-        getArticleList(this.page, this.articleTree[this.active].id).then(response => {
+        console.log('doGetArticleList:page:' + page)
+
+        getArticleList(page, this.articleTree[this.active].id).then(response => {
           if (!isSuccess(response.errorCode)) {
             this.$toast(response.errorMsg)
             return
@@ -78,17 +87,31 @@
 
           console.log('doGetArticleList finished....')
 
-          if (this.page === 0) {
-            this.articles = []
+
+          if (page === 0) {
+            if (!components || components.length <= 0) {
+              this.articles = []
+            } else {
+              components[0].datas = []
+            }
           }
 
-          this.$refs.item[this.active].onFinish()
-          this.articles.push(...response.data.datas)
-          if (response.data.over === true) {
-            this.$refs.item[this.active].onNoMoreData()
+
+          if (components && components.length > 0) {
+            components[0].onFinish()
+          }
+
+          if (!components || components.length <= 0 || !components[0].datas) {
+            this.articles.push(...response.data.datas)
+          } else {
+            components[0].datas.push(...response.data.datas)
+          }
+          if (response.data.over === true && components && components.length > 0) {
+            components[0].onNoMoreData()
             return
           }
-          this.page++
+
+
           this.$forceUpdate()
 
         }).catch(exception => {
@@ -100,12 +123,12 @@
 
       onRefresh() {
         console.log('onRefresh')
-        this.page = 0
         this.doGetArticleList()
       },
 
       onLoad() {
         console.log('onLoad')
+        this.$refs[`item:${this.active}`][0].page++
         this.doGetArticleList()
       }
     },
