@@ -2,11 +2,11 @@
   <div>
 
     <van-pull-refresh :disabled="false" v-model="refreshing" @refresh="onRefresh"
+                      v-if="list.length>0"
     >
-      <!--      v-if="(datas.length>0||list.length>0)"-->
-
 
       <van-list
+
         v-model="loading"
         :finished="finished"
         :immediate-check="false"
@@ -16,10 +16,10 @@
 
 
         <div class="item">
-          <component :is="name" v-for="(article,index) in datas" :item="article" :key="index">
+          <component :is="name" v-for="(article,index) in list" :item="article" :key="index">
             动态组件
           </component>
-          <!--          <article-item v-for="(article,index) in list" :item="article" :key="index"></article-item>-->
+
         </div>
 
 
@@ -35,27 +35,34 @@
   export default {
     name: 'ListView',
     components: { ArticleItem },
-    props: ['list', 'name'],
+    props: {
+      list: {
+        type: Array,
+        default: () => {
+          return []
+        }
+      },
+      name: String
+    },
     data() {
       return {
         loading: false,
         finished: false,
-        refreshing: false,
-        page: 0,
-        datas: this.list
+        refreshing: false
+
       }
     },
     methods: {
       onRefresh() {
         this.finished = false
         this.loading = true
-        console.log('list view on refresh:page:' + this.page)
+        console.log('list view on refresh:page:')
         this.$emit('onrefresh')
       },
 
       onLoad() {
-        console.log('list view on load:page:' + this.page)
-        this.$emit('onload')
+        console.log('list view on load:page:'+this.list[0].title)
+        this.$emit('onload',this)
       },
 
       //刷新或加载结束时调用
@@ -88,14 +95,7 @@
       console.log('list view mounted...')
       this.getComponent()
     }
-    // watch:{
-    //   datas:{
-    //     immediate:true,
-    //     handler(){
-    //       console.log('datas changed...')
-    //     }
-    //   }
-    // }
+
   }
 </script>
 

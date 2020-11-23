@@ -9,7 +9,7 @@
       type="line" color="#07c160"
       title-active-color="#07c160" title-inactive-color="#333333">
       <van-tab v-for="(item,index) in articleTree" :title="item.name" :key="index">
-        <ListView :ref="`item:${index}`" :list="articles" @onrefresh="onRefresh" @onload="onLoad"
+        <ListView :ref="`item:${index}`" :list="articles[index]" @onrefresh="onRefresh" @onload="onLoad"
                   name="article-item">
         </ListView>
       </van-tab>
@@ -30,8 +30,8 @@
       return {
         active: 0,
         articleTree: [],
-        articles: []
-        // page: 0
+        articles: [],//二维数组，内部是各种文章列表[[],[],[]]
+        pages: []//页码也是数组
 
       }
     },
@@ -39,9 +39,7 @@
 
       onTabClick() {
 
-        console.log('active:' + this.active + ',loading:' + this.$refs[`item:${this.active}`])
-        let refs = this.$refs[`item:${this.active}`]
-        if (!refs || refs.length <= 0 || !refs[0].datas || refs[0].datas.length <= 0) {
+        if (!this.articles[this.active]) {
           this.onRefresh()
         }
 
@@ -69,15 +67,13 @@
 
       },
       doGetArticleList() {
-        let components = this.$refs[`item:${this.active}`]
-        let page
-        if (!components || components.length <= 0 || !components[0].page) {
-          page = 0
-        } else {
-          page = components[0].page
+        let page = undefined
+        if (!this.pages || !this.pages[this.active]) {
+          this.pages[this.active] = 0
         }
+        page = this.pages[this.active]
 
-        console.log('doGetArticleList:page:' + page)
+
 
         getArticleList(page, this.articleTree[this.active].id).then(response => {
           if (!isSuccess(response.errorCode)) {
@@ -85,32 +81,23 @@
             return
           }
 
-          console.log('doGetArticleList finished....')
+          console.log('doGetArticleList finished....page:'+page)
 
 
           if (page === 0) {
-            if (!components || components.length <= 0) {
-              this.articles = []
-            } else {
-              components[0].datas = []
-            }
+            this.articles[this.active] = []
           }
 
 
-          if (components && components.length > 0) {
-            components[0].onFinish()
+          if (this.$refs[`item:${this.active}`]) {
+            this.$refs[`item:${this.active}`][0].onFinish()
           }
 
-          if (!components || components.length <= 0 || !components[0].datas) {
-            this.articles.push(...response.data.datas)
-          } else {
-            components[0].datas.push(...response.data.datas)
-          }
-          if (response.data.over === true && components && components.length > 0) {
-            components[0].onNoMoreData()
-            return
-          }
+          this.articles[this.active].push(...response.data.datas)
 
+          if (this.$refs[`item:${this.active}`] && response.data.over === true) {
+            this.$refs[`item:${this.active}`][0].onNoMoreData()
+          }
 
           this.$forceUpdate()
 
@@ -123,13 +110,17 @@
 
       onRefresh() {
         console.log('onRefresh')
+        this.pages[this.active] = 0
         this.doGetArticleList()
       },
 
-      onLoad() {
-        console.log('onLoad')
-        this.$refs[`item:${this.active}`][0].page++
-        this.doGetArticleList()
+      onLoad(object) {
+        console.log('onLoad:'+(object===this.$refs[`item:${this.active}`][0]))
+
+        // if(object===this.$refs[`item:${this.active}`][0]){
+        //   this.pages[this.active] = this.pages[this.active]++
+        //   this.doGetArticleList()
+        // }
       }
     },
     mounted() {
